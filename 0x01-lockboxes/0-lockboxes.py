@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-
+ #!/usr/bin/python3`
 def canUnlockAll(boxes):
     """Return True if all boxes can be opened, else return False"""
     num_boxes = len(boxes)
@@ -18,6 +17,11 @@ def canUnlockAll(boxes):
     return all(visited)
 
 # Example usage
-boxes = [[1], [2], []]
-print(canUnlockAll(boxes))  # Output: True
+boxes1 = [[1], [2], [3], [4], []]
+boxes2 = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
+boxes3 = [[1, 4], [2], [0, 4, 1], [3], [], [4, 1], [5, 6]]
+
+print(canUnlockAll(boxes1))  
+print(canUnlockAll(boxes2))  
+print(canUnlockAll(boxes3))  
 

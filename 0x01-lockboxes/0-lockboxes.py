@@ -1,27 +1,65 @@
- #!/usr/bin/python3`
+#!/usr/bin/python3
+"""Solves the lock boxes puzzle """
+
+
+def look_next_opened_box(opened_boxes):
+    """Looks for the next opened box
+    Args:
+        opened_boxes (dict): Dictionary which contains boxes already opened
+    Returns:
+        list: List with the keys contained in the opened box
+    """
+    for index, box in opened_boxes.items():
+        if box.get('status') == 'opened':
+            box['status'] = 'opened/checked'
+            return box.get('keys')
+    return None
+
+
 def canUnlockAll(boxes):
-    """Return True if all boxes can be opened, else return False"""
-    num_boxes = len(boxes)
-    visited = [False] * num_boxes  # Keep track of visited boxes
-    visited[0] = True  # Start with the first box unlocked
-    stack = [0]  # Stack to keep track of boxes to visit
+    """Check if all boxes can be opened
+    Args:
+        boxes (list): List which contain all the boxes with the keys
+    Returns:
+        bool: True if all boxes can be opened, otherwise, False
+    """
+    if len(boxes) <= 1 or boxes == [[]]:
+        return True
 
-    while stack:
-        current_box = stack.pop()
-        for key in boxes[current_box]:
-            if key < num_boxes and not visited[key]:
-                visited[key] = True
-                stack.append(key)
+    aux = {}
+    while True:
+        if len(aux) == 0:
+            aux[0] = {
+                'status': 'opened',
+                'keys': boxes[0],
+            }
+        keys = look_next_opened_box(aux)
+        if keys:
+            for key in keys:
+                try:
+                    if aux.get(key) and aux.get(key).get('status') \
+                       == 'opened/checked':
+                        continue
+                    aux[key] = {
+                        'status': 'opened',
+                        'keys': boxes[key]
+                    }
+                except (KeyError, IndexError):
+                    continue
+        elif 'opened' in [box.get('status') for box in aux.values()]:
+            continue
+        elif len(aux) == len(boxes):
+            break
+        else:
+            return False
 
-    # Check if all boxes are visited
-    return all(visited)
+    return len(aux) == len(boxes)
 
-# Example usage
-boxes1 = [[1], [2], [3], [4], []]
-boxes2 = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
-boxes3 = [[1, 4], [2], [0, 4, 1], [3], [], [4, 1], [5, 6]]
 
-print(canUnlockAll(boxes1))  
-print(canUnlockAll(boxes2))  
-print(canUnlockAll(boxes3))  
+def main():
+    """Entry point"""
+    canUnlockAll([[]])
 
+
+if __name__ == '__main__':
+    main()

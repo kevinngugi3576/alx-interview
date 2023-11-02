@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 
-""" N queens """
-
 import sys
 
-if len(sys.argv) > 2 or len(sys.argv) < 2:
+if len(sys.argv) != 2:
   print("Usage: nqueens N")
   exit(1)
 
@@ -12,34 +10,30 @@ if not sys.argv[1].isdigit():
   print("N must be a number")
   exit(1)
 
-n = int(sys.argv[1])
+n = int(sys.argv[1])  
 
-if n < 4: 
+if n < 4:
   print("N must be at least 4")
   exit(1)
 
-def queens(n, i=0, a=[], b=[], c=[]):
+def queens(n, row=0, cols=[], diag1=[], diag2=[]):
 
-  if i < n:
-    for j in range(n):
-      if j not in a and i+j not in b and i-j not in c:
-        yield from queens(n, i+1, a+[j], b+[i+j], c+[i-j])
+  if row == n:
+    yield cols
 
-  else:
-    yield [a]
+  for col in range(n):
+    if col not in cols and row+col not in diag1 and row-col not in diag2:
+      yield from queens(n, row+1, cols+[col], diag1+[row+col], diag2+[row-col])
+
 
 def solve(n):
-  
-  solutions = []
 
+  solutions = []
   for solution in queens(n):
-    solutions.append(solution[0])
+    solutions.append(solution)
   
   for solution in solutions:
-    for i in range(len(solution)):
-      print([i, solution[i]])
-
-    print()  
+    print([[i, col] for i, col in enumerate(solution)])
 
 if __name__ == "__main__":
   solve(n)
